@@ -1,5 +1,7 @@
 import { AppTabs } from "@/src/components/tabs/AppTabs";
 import { Leaf } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+
 
 export default function Page() {
   return (
@@ -16,6 +18,9 @@ export default function Page() {
             <p className="text-xs text-muted-foreground">
               AI-powered image classification
             </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
           </div>
         </div>
       </header>
