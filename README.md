@@ -1,4 +1,4 @@
-# 🌱 Image Classifier – Frontend
+# Image Classifier – Frontend
 
 # Integrantes del proyecto
 
