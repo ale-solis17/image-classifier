@@ -8,6 +8,7 @@ import {
   Trash2,
   Eye,
   Filter,
+  ImageOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,10 +68,10 @@ export function HistoryCards({ items, onClearHistory }: HistoryCardsProps) {
           <Filter className="h-6 w-6 text-muted-foreground" />
         </div>
         <p className="mt-4 text-sm font-medium text-foreground">
-          No classifications yet
+          Aun no hay clasificaciones
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          Go to the Classify tab to start classifying images.
+          Ve a la pestana Clasificar para comenzar a clasificar imagenes.
         </p>
       </div>
     );
@@ -83,11 +84,11 @@ export function HistoryCards({ items, onClearHistory }: HistoryCardsProps) {
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search by label..."
+            placeholder="Buscar por etiqueta..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
-            aria-label="Search classifications by label"
+            aria-label="Buscar clasificaciones por etiqueta"
           />
         </div>
         <div className="flex items-center gap-4">
@@ -98,7 +99,7 @@ export function HistoryCards({ items, onClearHistory }: HistoryCardsProps) {
               onCheckedChange={setHighConfidenceOnly}
             />
             <Label htmlFor="high-confidence" className="text-xs">
-              {"High confidence (>= 80%)"}
+              {"Alta confianza (>= 80%)"}
             </Label>
           </div>
           <Button
@@ -107,7 +108,7 @@ export function HistoryCards({ items, onClearHistory }: HistoryCardsProps) {
             onClick={() => setSortAsc(!sortAsc)}
           >
             <ArrowUpDown className="mr-1.5 h-3.5 w-3.5" />
-            {sortAsc ? "Oldest first" : "Newest first"}
+            {sortAsc ? "Mas antiguas primero" : "Mas recientes primero"}
           </Button>
           <Button
             variant="destructive"
@@ -115,20 +116,20 @@ export function HistoryCards({ items, onClearHistory }: HistoryCardsProps) {
             onClick={onClearHistory}
           >
             <Trash2 className="mr-1.5 h-3.5 w-3.5" />
-            Clear
+            Limpiar
           </Button>
         </div>
       </div>
 
       {/* Results count */}
       <p className="text-xs text-muted-foreground">
-        Showing {filtered.length} of {items.length} results
+        Mostrando {filtered.length} de {items.length} resultados
       </p>
 
       {/* Cards grid */}
       {filtered.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          No results match your filters.
+          Ningun resultado coincide con tus filtros.
         </p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -137,11 +138,18 @@ export function HistoryCards({ items, onClearHistory }: HistoryCardsProps) {
             return (
               <Card key={item.id} className="overflow-hidden">
                 <div className="flex h-28 items-center justify-center bg-muted/30">
-                  <img
-                    src={item.imageUrl}
-                    alt={`Classified as ${item.label}`}
-                    className="max-h-full object-contain p-2"
-                  />
+                  {item.imageUrl ? (
+                    <img
+                      src={item.imageUrl}
+                      alt={`Clasificada como ${item.label}`}
+                      className="max-h-full object-contain p-2"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                      <ImageOff className="h-5 w-5" />
+                      <span className="text-[11px]">Vista previa no disponible</span>
+                    </div>
+                  )}
                 </div>
                 <CardContent className="flex flex-col gap-2 p-4">
                   <div className="flex items-center justify-between">
@@ -167,7 +175,7 @@ export function HistoryCards({ items, onClearHistory }: HistoryCardsProps) {
                       onClick={() => handleViewDetail(item)}
                     >
                       <Eye className="mr-1 h-3 w-3" />
-                      Detail
+                      Detalle
                     </Button>
                   </div>
                 </CardContent>

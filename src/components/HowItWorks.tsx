@@ -5,18 +5,18 @@ import { Upload, Cpu, BarChart3 } from "lucide-react";
 const steps = [
   {
     icon: Upload,
-    title: "Upload",
-    description: "Drag and drop or click to upload your image.",
+    title: "Sube",
+    description: "Arrastra y suelta o haz clic para subir tu imagen.",
   },
   {
     icon: Cpu,
-    title: "Classify",
-    description: "Our AI model analyzes the image and generates a prediction.",
+    title: "Clasifica",
+    description: "Nuestro modelo de IA analiza la imagen y genera una prediccion.",
   },
   {
     icon: BarChart3,
-    title: "Results",
-    description: "View the predicted label and confidence scores.",
+    title: "Resultados",
+    description: "Visualiza la etiqueta predicha y los niveles de confianza.",
   },
 ];
 
@@ -24,7 +24,7 @@ export function HowItWorks() {
   return (
     <div className="rounded-xl border bg-card p-5">
       <h3 className="mb-4 text-sm font-semibold text-foreground">
-        How it works
+        Como funciona
       </h3>
       <div className="flex flex-col gap-4">
         {steps.map((step, i) => (

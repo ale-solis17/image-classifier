@@ -32,7 +32,7 @@ export function DatasetTab() {
       setItems(res.items);
       setTotalPages(res.totalPages);
     } catch {
-      toast.error("Failed to load dataset");
+      toast.error("No se pudo cargar el dataset");
     } finally {
       setIsLoading(false);
     }
@@ -51,10 +51,10 @@ export function DatasetTab() {
     <div className="flex flex-col gap-4">
       <div>
         <h2 className="text-lg font-semibold text-foreground">
-          Dataset Explorer
+          Explorador del Dataset
         </h2>
         <p className="text-sm text-muted-foreground">
-          Browse and manage saved images in the dataset.
+          Explora y administra las imagenes guardadas en el dataset.
         </p>
       </div>
 
@@ -81,10 +81,10 @@ export function DatasetTab() {
             onClick={() => setCurrentPage((p) => p - 1)}
           >
             <ChevronLeft className="mr-1 h-4 w-4" />
-            Previous
+            Anterior
           </Button>
           <span className="text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages}
+            Pagina {currentPage} de {totalPages}
           </span>
           <Button
             variant="outline"
@@ -92,7 +92,7 @@ export function DatasetTab() {
             disabled={currentPage >= totalPages}
             onClick={() => setCurrentPage((p) => p + 1)}
           >
-            Next
+            Siguiente
             <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </div>

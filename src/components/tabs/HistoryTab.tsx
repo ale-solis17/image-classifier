@@ -13,10 +13,10 @@ export function HistoryTab({ items, onClearHistory }: HistoryTabProps) {
     <div className="flex flex-col gap-4">
       <div>
         <h2 className="text-lg font-semibold text-foreground">
-          Classification History
+          Historial de Clasificaciones
         </h2>
         <p className="text-sm text-muted-foreground">
-          Review your past classifications. Data is stored in memory (max 20).
+          Revisa tus clasificaciones anteriores. Los datos se guardan localmente en tu navegador (maximo 20).
         </p>
       </div>
       <HistoryCards items={items} onClearHistory={onClearHistory} />

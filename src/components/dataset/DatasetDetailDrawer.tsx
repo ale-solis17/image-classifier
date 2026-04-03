@@ -66,11 +66,11 @@ export function DatasetDetailDrawer({
         label: editLabel,
         status: editStatus,
       });
-      toast.success("Label saved");
+      toast.success("Etiqueta guardada");
       onRefresh();
       onOpenChange(false);
     } catch {
-      toast.error("Failed to save label");
+      toast.error("No se pudo guardar la etiqueta");
     } finally {
       setSaving(false);
     }
@@ -80,11 +80,11 @@ export function DatasetDetailDrawer({
     setSaving(true);
     try {
       await updateDatasetItem(item.id, { status: "pending" });
-      toast.success("Marked as pending");
+      toast.success("Marcado como pendiente");
       onRefresh();
       onOpenChange(false);
     } catch {
-      toast.error("Failed to update status");
+      toast.error("No se pudo actualizar el estado");
     } finally {
       setSaving(false);
     }
@@ -94,11 +94,11 @@ export function DatasetDetailDrawer({
     setDeleting(true);
     try {
       await deleteDatasetItem(item.id);
-      toast.success("Item deleted");
+      toast.success("Elemento eliminado");
       onRefresh();
       onOpenChange(false);
     } catch {
-      toast.error("Failed to delete item");
+      toast.error("No se pudo eliminar el elemento");
     } finally {
       setDeleting(false);
     }
@@ -118,7 +118,7 @@ export function DatasetDetailDrawer({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Dataset Item</DialogTitle>
+          <DialogTitle>Elemento del Dataset</DialogTitle>
           <DialogDescription>
             ID: {item.id.slice(0, 8)}... | {format(new Date(item.createdAt), "PPpp")}
           </DialogDescription>
@@ -129,7 +129,7 @@ export function DatasetDetailDrawer({
           <div className="overflow-hidden rounded-lg border bg-muted/30">
             <img
               src={item.imageUrl}
-              alt={item.label ? `Image labeled ${item.label}` : "Dataset image"}
+              alt={item.label ? `Imagen etiquetada como ${item.label}` : "Imagen del dataset"}
               className="mx-auto max-h-[250px] object-contain p-2"
             />
           </div>
@@ -143,7 +143,7 @@ export function DatasetDetailDrawer({
             )}
             {confidencePercent !== null && (
               <Badge variant="default" className="text-xs">
-                {confidencePercent}% confidence
+                {confidencePercent}% de confianza
               </Badge>
             )}
             {item.status && (
@@ -168,27 +168,27 @@ export function DatasetDetailDrawer({
           {/* Edit label */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="edit-label" className="text-sm">
-              Edit Label
+              Editar Etiqueta
             </Label>
             <Input
               id="edit-label"
               value={editLabel}
               onChange={(e) => setEditLabel(e.target.value)}
-              placeholder="Enter label..."
+              placeholder="Ingresa una etiqueta..."
             />
           </div>
 
           {/* Edit status */}
           <div className="flex flex-col gap-2">
-            <Label className="text-sm">Status</Label>
+            <Label className="text-sm">Estado</Label>
             <Select value={editStatus} onValueChange={setEditStatus}>
-              <SelectTrigger aria-label="Select status">
+              <SelectTrigger aria-label="Seleccionar estado">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="labeled">Labeled</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="labeled">Etiquetado</SelectItem>
+                <SelectItem value="pending">Pendiente</SelectItem>
+                <SelectItem value="rejected">Rechazado</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -204,7 +204,7 @@ export function DatasetDetailDrawer({
             ) : (
               <Save className="mr-2 h-4 w-4" />
             )}
-            Save Label
+            Guardar Etiqueta
           </Button>
           <Button
             variant="outline"
@@ -212,7 +212,7 @@ export function DatasetDetailDrawer({
             disabled={saving || deleting}
           >
             <Clock className="mr-2 h-4 w-4" />
-            Mark Pending
+            Marcar Pendiente
           </Button>
           <Button
             variant="destructive"
@@ -224,7 +224,7 @@ export function DatasetDetailDrawer({
             ) : (
               <Trash2 className="mr-2 h-4 w-4" />
             )}
-            Delete
+            Eliminar
           </Button>
         </DialogFooter>
       </DialogContent>

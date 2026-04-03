@@ -45,16 +45,16 @@ export function ResultCard({ result, isLoading }: ResultCardProps) {
       <CardHeader>
         <div className="flex items-center gap-2">
           <CheckCircle2 className="h-5 w-5 text-primary" />
-          <CardTitle className="text-base">Classification Result</CardTitle>
+          <CardTitle className="text-base">Resultado de la Clasificacion</CardTitle>
         </div>
-        <CardDescription>AI prediction for your image</CardDescription>
+        <CardDescription>Prediccion de la IA para tu imagen</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         {/* Main prediction */}
         <div className="flex flex-col gap-2 rounded-lg bg-accent/50 p-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">
-              Predicted Label
+              Etiqueta Predicha
             </span>
             <Badge variant="default" className="text-sm">
               {confidencePercent}%
@@ -72,7 +72,7 @@ export function ResultCard({ result, isLoading }: ResultCardProps) {
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm font-medium text-muted-foreground">
-                Top Predictions
+                Predicciones Principales
               </span>
             </div>
             <div className="flex flex-col gap-2">

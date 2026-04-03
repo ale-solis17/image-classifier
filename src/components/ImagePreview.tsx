@@ -28,7 +28,7 @@ export function ImagePreview({
           className="h-6 w-6"
           onClick={onClear}
           disabled={disabled}
-          aria-label="Remove image"
+          aria-label="Quitar imagen"
         >
           <X className="h-3.5 w-3.5" />
         </Button>
@@ -36,7 +36,7 @@ export function ImagePreview({
       <div className="flex items-center justify-center bg-muted/30 p-4">
         <img
           src={src}
-          alt={`Preview of ${fileName}`}
+          alt={`Vista previa de ${fileName}`}
           className="max-h-[300px] rounded-lg object-contain"
         />
       </div>

@@ -4,6 +4,18 @@ export type ClassifyResponse = {
   top?: { label: string; confidence: number }[];
 };
 
+export type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+export type BacteriaChatResponse = {
+  answer: string;
+  bacteria_label: string;
+  refused: boolean;
+  scope: string;
+};
+
 export type HistoryItem = {
   id: string;
   imageUrl: string;

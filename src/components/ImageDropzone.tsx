@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { Upload, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_SIZE = 50 * 1024 * 1024; // 50MB
 
 type ImageDropzoneProps = {
   onFileSelect: (file: File) => void;
@@ -17,8 +17,8 @@ export function ImageDropzone({ onFileSelect, disabled }: ImageDropzoneProps) {
 
   const validate = useCallback(
     (file: File): string | null => {
-      if (!file.type.startsWith("image/")) return "Please select an image file.";
-      if (file.size > MAX_SIZE) return "File size must be under 5 MB.";
+      if (!file.type.startsWith("image/")) return "Selecciona un archivo de imagen.";
+      if (file.size > MAX_SIZE) return "El archivo debe pesar menos de 50 MB.";
       return null;
     },
     []
@@ -74,7 +74,7 @@ export function ImageDropzone({ onFileSelect, disabled }: ImageDropzoneProps) {
     <div
       role="button"
       tabIndex={0}
-      aria-label="Upload image. Drag and drop or click to select."
+      aria-label="Subir imagen. Arrastra y suelta o haz clic para seleccionar."
       className={cn(
         "relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors cursor-pointer",
         "min-h-[200px]",
@@ -118,10 +118,10 @@ export function ImageDropzone({ onFileSelect, disabled }: ImageDropzoneProps) {
         </div>
         <div>
           <p className="text-sm font-medium text-foreground">
-            {isDragging ? "Drop your image here" : "Drag & drop an image here"}
+            {isDragging ? "Suelta tu imagen aqui" : "Arrastra y suelta una imagen aqui"}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            or click to browse. Max 5 MB.
+            o haz clic para buscar. Maximo 50 MB.
           </p>
         </div>
       </div>

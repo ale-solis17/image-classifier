@@ -23,7 +23,7 @@ export function ThemeToggle() {
       variant="outline"
       size="icon"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label="Toggle theme"
+      aria-label="Cambiar tema"
     >
       {isDark ? (
         <Sun className="h-5 w-5" />

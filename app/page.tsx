@@ -16,7 +16,7 @@ export default function Page() {
               VisionLab
             </h1>
             <p className="text-xs text-muted-foreground">
-              AI-powered image classification
+              Clasificacion de imagenes con IA
             </p>
           </div>
           <div className="flex items-center gap-2">

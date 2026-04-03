@@ -56,10 +56,10 @@ export function DatasetGrid({ items, isLoading, onRefresh }: DatasetGridProps) {
           <Database className="h-6 w-6 text-muted-foreground" />
         </div>
         <p className="mt-4 text-sm font-medium text-foreground">
-          No dataset items found
+          No se encontraron elementos en el dataset
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          Try adjusting your filters or adding images to the dataset.
+          Prueba ajustando los filtros o agregando imagenes al dataset.
         </p>
       </div>
     );
@@ -77,20 +77,20 @@ export function DatasetGrid({ items, isLoading, onRefresh }: DatasetGridProps) {
             <div className="relative flex h-32 items-center justify-center bg-muted/30">
               <img
                 src={item.imageUrl}
-                alt={item.label ? `Labeled ${item.label}` : "Dataset image"}
+                alt={item.label ? `Etiquetada como ${item.label}` : "Imagen del dataset"}
                 className="max-h-full object-contain p-2"
               />
               <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 opacity-0 transition-all group-hover:bg-foreground/5 group-hover:opacity-100">
                 <Button variant="secondary" size="sm" className="text-xs">
                   <Eye className="mr-1 h-3 w-3" />
-                  Open
+                  Abrir
                 </Button>
               </div>
             </div>
             <CardContent className="flex flex-col gap-1.5 p-3">
               <div className="flex items-center justify-between">
                 <span className="truncate text-sm font-medium text-foreground">
-                  {item.label ?? "Unlabeled"}
+                  {item.label ?? "Sin etiqueta"}
                 </span>
                 {item.confidence != null && (
                   <span className="shrink-0 font-mono text-xs text-muted-foreground">

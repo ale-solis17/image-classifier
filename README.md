@@ -1,4 +1,4 @@
-# Image Classifier – Frontend
+# Image Classifier - Frontend
 
 # Integrantes del proyecto
 
@@ -7,11 +7,11 @@
 
 # Descripción del proyecto
 
-* El frontend corresponde a una aplicación web desarrollada con Next.js que permite al usuario cargar imágenes para ser analizadas mediante inteligencia artificial. La interfaz se comunica con una API REST encargada de procesar la imagen y devolver la clasificación obtenida.
+* El proyecto corresponde a una aplicación web desarrollada con Next.js que permite al usuario cargar imágenes para ser analizadas mediante inteligencia artificial. La interfaz consume un backend externo para clasificar imágenes y mantiene el historial y el dataset de demostración en el navegador.
 
 # Resumen teórico
-* Las aplicaciones modernas utilizan arquitecturas desacopladas donde la interfaz de usuario consume servicios mediante APIs REST. Esto permite integrar modelos de inteligencia artificial sin afectar la experiencia del usuario.
-Next.js facilita la creación de interfaces reactivas y eficientes mediante renderizado híbrido.
+* Las aplicaciones modernas utilizan arquitecturas desacopladas donde la interfaz de usuario consume servicios mediante APIs REST. Esto permite integrar modelos de inteligencia artificial sin mezclar la lógica visual con la lógica de procesamiento.
+Next.js facilita la creación de interfaces reactivas y eficientes para este tipo de experiencias.
 
 # Tecnologías utilizadas
 
@@ -21,10 +21,11 @@ Next.js facilita la creación de interfaces reactivas y eficientes mediante rend
 * TailwindCSS
 * PNPM
 * Fetch API
+* localStorage
 
 # Diseño
 
-* Usuario → Interfaz Web → API NextJS → Backend FastAPI → Modelo IA
+* Usuario -> Interfaz Web -> Backend de clasificación
 
 # Funciones principales:
 
@@ -32,17 +33,18 @@ Next.js facilita la creación de interfaces reactivas y eficientes mediante rend
 * Envío mediante FormData
 * Visualización de resultados
 * Comunicación asincrónica con backend
+* Historial local persistido en navegador
+* Dataset de demostración gestionado en navegador
 
 # Obstáculos encontrados
 
 * Configuración de variables de entorno.
-* Integración entre Next.js y FastAPI.
 * Manejo correcto de solicitudes multipart/form-data.
-* Ajuste de CORS entre servicios locales.
+* Ajuste de CORS entre frontend y backend externo.
 
 # Conclusiones
 
-* La integración entre Next.js y FastAPI demuestra cómo la inteligencia artificial puede incorporarse en aplicaciones web modernas manteniendo separación de responsabilidades y escalabilidad.
+* Mantener el proyecto como frontend puro simplifica su estructura y deja más clara la responsabilidad de cada capa.
 
 # Instrucciones para ejecutar
 
@@ -58,7 +60,7 @@ Next.js facilita la creación de interfaces reactivas y eficientes mediante rend
 
 ```NEXT_PUBLIC_API_URL=http://localhost:8000```
 
-* Ejecutar: **¡Hay que tener habilitado el pnpm!**
+* Ejecutar: **Hay que tener habilitado pnpm**
 
 ```pnpm run dev```
 

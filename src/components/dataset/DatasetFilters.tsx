@@ -37,31 +37,31 @@ export function DatasetFilters({
       <div className="relative flex-1 max-w-sm">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Search by label or ID..."
+          placeholder="Buscar por etiqueta o ID..."
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           className="pl-9"
-          aria-label="Search dataset"
+          aria-label="Buscar en el dataset"
         />
       </div>
 
       {/* Status filter */}
       <Select value={status} onValueChange={onStatusChange}>
-        <SelectTrigger className="w-[150px]" aria-label="Filter by status">
-          <SelectValue placeholder="All statuses" />
+        <SelectTrigger className="w-[150px]" aria-label="Filtrar por estado">
+          <SelectValue placeholder="Todos los estados" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All statuses</SelectItem>
-          <SelectItem value="labeled">Labeled</SelectItem>
-          <SelectItem value="pending">Pending</SelectItem>
-          <SelectItem value="rejected">Rejected</SelectItem>
+          <SelectItem value="all">Todos los estados</SelectItem>
+          <SelectItem value="labeled">Etiquetado</SelectItem>
+          <SelectItem value="pending">Pendiente</SelectItem>
+          <SelectItem value="rejected">Rechazado</SelectItem>
         </SelectContent>
       </Select>
 
       {/* Date from */}
       <div className="flex flex-col gap-1">
         <label htmlFor="date-from" className="text-xs text-muted-foreground">
-          From
+          Desde
         </label>
         <Input
           id="date-from"
@@ -75,7 +75,7 @@ export function DatasetFilters({
       {/* Date to */}
       <div className="flex flex-col gap-1">
         <label htmlFor="date-to" className="text-xs text-muted-foreground">
-          To
+          Hasta
         </label>
         <Input
           id="date-to"

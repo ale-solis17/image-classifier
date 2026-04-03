@@ -8,6 +8,7 @@ import { ImageDropzone } from "@/src/components/ImageDropzone";
 import { ImagePreview } from "@/src/components/ImagePreview";
 import { ResultCard } from "@/src/components/ResultCard";
 import { HowItWorks } from "@/src/components/HowItWorks";
+import { BacteriaChat } from "@/src/components/BacteriaChat";
 import { classifyImage } from "@/src/lib/api/classify";
 import type { ClassifyResponse, HistoryItem } from "@/src/lib/types";
 
@@ -21,11 +22,20 @@ export function ClassifyTab({ onClassified }: ClassifyTabProps) {
   const [result, setResult] = useState<ClassifyResponse | null>(null);
   const [isClassifying, setIsClassifying] = useState(false);
 
+  const fileToDataUrl = (value: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(new Error("No se pudo leer la imagen"));
+      reader.readAsDataURL(value);
+    });
+
   const handleFileSelect = useCallback((f: File) => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setFile(f);
     setPreviewUrl(URL.createObjectURL(f));
     setResult(null);
-  }, []);
+  }, [previewUrl]);
 
   const handleClear = useCallback(() => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -40,12 +50,13 @@ export function ClassifyTab({ onClassified }: ClassifyTabProps) {
 
     try {
       const res = await classifyImage(file);
+      const storedImageUrl = await fileToDataUrl(file);
       setResult(res);
-      toast.success("Classification completed!");
+      toast.success("Clasificacion completada");
 
       const historyItem: HistoryItem = {
         id: crypto.randomUUID(),
-        imageUrl: previewUrl ?? "",
+        imageUrl: storedImageUrl,
         label: res.label,
         confidence: res.confidence,
         createdAt: new Date().toISOString(),
@@ -54,7 +65,7 @@ export function ClassifyTab({ onClassified }: ClassifyTabProps) {
       onClassified(historyItem);
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Classification failed"
+        err instanceof Error ? err.message : "La clasificacion fallo"
       );
     } finally {
       setIsClassifying(false);
@@ -88,12 +99,12 @@ export function ClassifyTab({ onClassified }: ClassifyTabProps) {
             {isClassifying ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Classifying...
+                Clasificando...
               </>
             ) : (
               <>
                 <Sparkles className="mr-2 h-4 w-4" />
-                Classify
+                Clasificar
               </>
             )}
           </Button>
@@ -104,12 +115,13 @@ export function ClassifyTab({ onClassified }: ClassifyTabProps) {
               disabled={isClassifying}
             >
               <RotateCcw className="mr-2 h-4 w-4" />
-              Clear
+              Limpiar
             </Button>
           )}
         </div>
 
         <ResultCard result={result} isLoading={isClassifying} />
+        {result && <BacteriaChat bacteriaLabel={result.label} />}
       </div>
 
       {/* Right column */}
