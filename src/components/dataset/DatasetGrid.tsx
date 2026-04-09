@@ -77,7 +77,13 @@ export function DatasetGrid({ items, isLoading, onRefresh }: DatasetGridProps) {
             <div className="relative flex h-32 items-center justify-center bg-muted/30">
               <img
                 src={item.imageUrl}
-                alt={item.label ? `Etiquetada como ${item.label}` : "Imagen del dataset"}
+                alt={
+                  item.humanLabel
+                    ? `Etiquetada como ${item.humanLabel}`
+                    : item.predictedLabel
+                      ? `Predicha como ${item.predictedLabel}`
+                      : "Imagen del dataset"
+                }
                 className="max-h-full object-contain p-2"
               />
               <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 opacity-0 transition-all group-hover:bg-foreground/5 group-hover:opacity-100">
@@ -90,7 +96,7 @@ export function DatasetGrid({ items, isLoading, onRefresh }: DatasetGridProps) {
             <CardContent className="flex flex-col gap-1.5 p-3">
               <div className="flex items-center justify-between">
                 <span className="truncate text-sm font-medium text-foreground">
-                  {item.label ?? "Sin etiqueta"}
+                  {item.humanLabel ?? item.predictedLabel ?? "Sin etiqueta"}
                 </span>
                 {item.confidence != null && (
                   <span className="shrink-0 font-mono text-xs text-muted-foreground">
@@ -98,12 +104,19 @@ export function DatasetGrid({ items, isLoading, onRefresh }: DatasetGridProps) {
                   </span>
                 )}
               </div>
+              <span className="truncate text-xs text-muted-foreground">
+                {item.originalName}
+              </span>
               {item.status && (
                 <Badge
                   variant={statusVariant[item.status] ?? "outline"}
                   className="w-fit text-[10px]"
                 >
-                  {item.status}
+                  {item.status === "labeled"
+                    ? "Etiquetado"
+                    : item.status === "pending"
+                      ? "Pendiente"
+                      : "Rechazado"}
                 </Badge>
               )}
             </CardContent>

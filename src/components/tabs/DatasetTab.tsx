@@ -14,10 +14,9 @@ export function DatasetTab() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -25,18 +24,17 @@ export function DatasetTab() {
       const res = await fetchDataset({
         query: query || undefined,
         status: status === "all" ? undefined : status,
-        from: dateFrom || undefined,
-        to: dateTo || undefined,
         page: currentPage,
       });
       setItems(res.items);
       setTotalPages(res.totalPages);
+      setTotal(res.total);
     } catch {
       toast.error("No se pudo cargar el dataset");
     } finally {
       setIsLoading(false);
     }
-  }, [query, status, dateFrom, dateTo, currentPage]);
+  }, [query, status, currentPage]);
 
   useEffect(() => {
     loadData();
@@ -45,7 +43,7 @@ export function DatasetTab() {
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [query, status, dateFrom, dateTo]);
+  }, [query, status]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -54,7 +52,7 @@ export function DatasetTab() {
           Explorador del Dataset
         </h2>
         <p className="text-sm text-muted-foreground">
-          Explora y administra las imagenes guardadas en el dataset.
+          Visualiza las imagenes reales registradas por el backend.
         </p>
       </div>
 
@@ -63,11 +61,11 @@ export function DatasetTab() {
         onQueryChange={setQuery}
         status={status}
         onStatusChange={setStatus}
-        dateFrom={dateFrom}
-        onDateFromChange={setDateFrom}
-        dateTo={dateTo}
-        onDateToChange={setDateTo}
       />
+
+      <p className="text-xs text-muted-foreground">
+        {total} elementos encontrados
+      </p>
 
       <DatasetGrid items={items} isLoading={isLoading} onRefresh={loadData} />
 

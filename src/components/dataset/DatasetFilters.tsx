@@ -15,10 +15,6 @@ type DatasetFiltersProps = {
   onQueryChange: (v: string) => void;
   status: string;
   onStatusChange: (v: string) => void;
-  dateFrom: string;
-  onDateFromChange: (v: string) => void;
-  dateTo: string;
-  onDateToChange: (v: string) => void;
 };
 
 export function DatasetFilters({
@@ -26,10 +22,6 @@ export function DatasetFilters({
   onQueryChange,
   status,
   onStatusChange,
-  dateFrom,
-  onDateFromChange,
-  dateTo,
-  onDateToChange,
 }: DatasetFiltersProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
@@ -37,7 +29,7 @@ export function DatasetFilters({
       <div className="relative flex-1 max-w-sm">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Buscar por etiqueta o ID..."
+          placeholder="Buscar por etiqueta humana..."
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           className="pl-9"
@@ -57,34 +49,6 @@ export function DatasetFilters({
           <SelectItem value="rejected">Rechazado</SelectItem>
         </SelectContent>
       </Select>
-
-      {/* Date from */}
-      <div className="flex flex-col gap-1">
-        <label htmlFor="date-from" className="text-xs text-muted-foreground">
-          Desde
-        </label>
-        <Input
-          id="date-from"
-          type="date"
-          value={dateFrom}
-          onChange={(e) => onDateFromChange(e.target.value)}
-          className="w-[150px]"
-        />
-      </div>
-
-      {/* Date to */}
-      <div className="flex flex-col gap-1">
-        <label htmlFor="date-to" className="text-xs text-muted-foreground">
-          Hasta
-        </label>
-        <Input
-          id="date-to"
-          type="date"
-          value={dateTo}
-          onChange={(e) => onDateToChange(e.target.value)}
-          className="w-[150px]"
-        />
-      </div>
     </div>
   );
 }

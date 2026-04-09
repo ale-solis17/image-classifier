@@ -28,7 +28,10 @@ export type HistoryItem = {
 export type DatasetItem = {
   id: string;
   imageUrl: string;
-  label?: string;
+  originalName: string;
+  filePath: string;
+  predictedLabel?: string;
+  humanLabel?: string;
   confidence?: number;
   status?: "labeled" | "pending" | "rejected";
   createdAt: string;

@@ -1,201 +1,99 @@
-import type { DatasetItem, DatasetDetailItem } from "@/src/lib/types";
+import type { DatasetItem } from "@/src/lib/types";
 
 export type DatasetQueryParams = {
   query?: string;
-  label?: string;
   status?: string;
-  from?: string;
-  to?: string;
   page?: number;
 };
 
 export type DatasetListResponse = {
   items: DatasetItem[];
+  total: number;
   totalPages: number;
   currentPage: number;
+  limit: number;
+  offset: number;
 };
 
-const STORAGE_KEY = "visionlab.dataset";
-const PER_PAGE = 8;
+type BackendDatasetItem = {
+  id: number;
+  file_path: string;
+  image_url: string;
+  original_name: string;
+  predicted_label?: string | null;
+  confidence?: number | null;
+  status?: "labeled" | "pending" | "rejected" | null;
+  human_label?: string | null;
+  created_at: string;
+};
 
-const MOCK_LABELS = [
-  "Amanita muscaria",
-  "Boletus edulis",
-  "Cantharellus cibarius",
-  "Morchella esculenta",
-  "Agaricus bisporus",
-  "Lactarius deliciosus",
-  "Pleurotus ostreatus",
-  "Tuber melanosporum",
-] as const;
+type BackendDatasetResponse = {
+  total: number;
+  limit: number;
+  offset: number;
+  items: BackendDatasetItem[];
+};
 
-const STATUSES: NonNullable<DatasetItem["status"]>[] = [
-  "labeled",
-  "pending",
-  "rejected",
-];
+const DEFAULT_LIMIT = 8;
 
-const PLACEHOLDER_IMAGES = [
-  "https://images.unsplash.com/photo-1504198266287-1659872e6590?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1518882463776-2af5fde6cf64?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1474557157379-8aa74a6ef541?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1509773896068-7fd415d91e2e?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1441974231531-c6227db76b6?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=400&h=400&fit=crop",
-] as const;
-
-function delay(ms = 150) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function createSeedDataset(): DatasetDetailItem[] {
-  return Array.from({ length: 24 }, (_, index) => {
-    const label = MOCK_LABELS[index % MOCK_LABELS.length];
-    const status = STATUSES[index % STATUSES.length];
-    const createdAt = new Date(Date.now() - index * 86400000).toISOString();
-    const confidence = Number((0.55 + (index % 5) * 0.08).toFixed(2));
-
-    return {
-      id: `ds-${String(index + 1).padStart(4, "0")}`,
-      imageUrl: PLACEHOLDER_IMAGES[index % PLACEHOLDER_IMAGES.length],
-      label: status === "pending" ? undefined : label,
-      confidence: status === "pending" ? undefined : confidence,
-      status,
-      createdAt,
-      top:
-        status === "pending"
-          ? undefined
-          : [
-              { label, confidence },
-              {
-                label: MOCK_LABELS[(index + 1) % MOCK_LABELS.length],
-                confidence: Number((confidence * 0.35).toFixed(2)),
-              },
-              {
-                label: MOCK_LABELS[(index + 2) % MOCK_LABELS.length],
-                confidence: Number((confidence * 0.18).toFixed(2)),
-              },
-            ],
-    };
-  });
-}
-
-function ensureBrowser() {
-  if (typeof window === "undefined") {
-    throw new Error("El almacenamiento del dataset solo esta disponible en el navegador");
-  }
-}
-
-function readDataset(): DatasetDetailItem[] {
-  ensureBrowser();
-
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try {
-      return JSON.parse(stored) as DatasetDetailItem[];
-    } catch {
-      window.localStorage.removeItem(STORAGE_KEY);
-    }
+function getApiUrl() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) {
+    throw new Error("Falta configurar NEXT_PUBLIC_API_URL");
   }
 
-  const seed = createSeedDataset();
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
-  return seed;
+  return apiUrl.replace(/\/$/, "");
 }
 
-function writeDataset(items: DatasetDetailItem[]) {
-  ensureBrowser();
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+function mapDatasetItem(item: BackendDatasetItem): DatasetItem {
+  return {
+    id: String(item.id),
+    imageUrl: item.image_url,
+    originalName: item.original_name,
+    filePath: item.file_path,
+    predictedLabel: item.predicted_label ?? undefined,
+    humanLabel: item.human_label ?? undefined,
+    confidence: item.confidence ?? undefined,
+    status: item.status ?? undefined,
+    createdAt: item.created_at,
+  };
 }
 
 export async function fetchDataset(
   params: DatasetQueryParams
 ): Promise<DatasetListResponse> {
-  await delay();
-
-  let filtered = readDataset();
-  const query = params.query?.trim().toLowerCase();
-  const label = params.label?.trim().toLowerCase();
-  const status = params.status?.trim().toLowerCase();
+  const apiUrl = getApiUrl();
   const page = Math.max(1, params.page ?? 1);
+  const offset = (page - 1) * DEFAULT_LIMIT;
 
-  if (query) {
-    filtered = filtered.filter(
-      (item) =>
-        item.id.toLowerCase().includes(query) ||
-        item.label?.toLowerCase().includes(query)
-    );
+  const searchParams = new URLSearchParams();
+  searchParams.set("limit", String(DEFAULT_LIMIT));
+  searchParams.set("offset", String(offset));
+
+  if (params.status) {
+    searchParams.set("status", params.status);
   }
 
-  if (label) {
-    filtered = filtered.filter((item) => item.label?.toLowerCase().includes(label));
+  if (params.query?.trim()) {
+    searchParams.set("human_label", params.query.trim());
   }
 
-  if (status) {
-    filtered = filtered.filter((item) => item.status === status);
+  const res = await fetch(`${apiUrl}/dataset?${searchParams.toString()}`);
+  if (!res.ok) {
+    const text = await res.text().catch(() => "Error desconocido");
+    throw new Error(`No se pudo cargar el dataset: ${text}`);
   }
 
-  if (params.from) {
-    const fromDate = new Date(params.from);
-    filtered = filtered.filter((item) => new Date(item.createdAt) >= fromDate);
-  }
-
-  if (params.to) {
-    const toDate = new Date(params.to);
-    toDate.setDate(toDate.getDate() + 1);
-    filtered = filtered.filter((item) => new Date(item.createdAt) <= toDate);
-  }
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
-  const currentPage = Math.min(page, totalPages);
-  const start = (currentPage - 1) * PER_PAGE;
+  const data = (await res.json()) as BackendDatasetResponse;
+  const totalPages = Math.max(1, Math.ceil(data.total / data.limit));
+  const currentPage = Math.floor(data.offset / data.limit) + 1;
 
   return {
-    items: filtered.slice(start, start + PER_PAGE),
+    items: data.items.map((item) => mapDatasetItem(item)),
+    total: data.total,
     totalPages,
     currentPage,
+    limit: data.limit,
+    offset: data.offset,
   };
-}
-
-export async function fetchDatasetItem(id: string): Promise<DatasetDetailItem> {
-  await delay(100);
-
-  const item = readDataset().find((entry) => entry.id === id);
-  if (!item) {
-    throw new Error("No se encontro el elemento del dataset");
-  }
-
-  return item;
-}
-
-export async function updateDatasetItem(
-  id: string,
-  data: { label?: string; status?: string }
-): Promise<DatasetDetailItem> {
-  await delay(100);
-
-  const items = readDataset();
-  const index = items.findIndex((entry) => entry.id === id);
-  if (index < 0) {
-    throw new Error("No se encontro el elemento del dataset");
-  }
-
-  const nextItem: DatasetDetailItem = {
-    ...items[index],
-    label: data.label?.trim() ? data.label.trim() : undefined,
-    status: (data.status as DatasetItem["status"]) ?? items[index].status,
-  };
-
-  items[index] = nextItem;
-  writeDataset(items);
-  return nextItem;
-}
-
-export async function deleteDatasetItem(id: string): Promise<void> {
-  await delay(100);
-
-  const nextItems = readDataset().filter((entry) => entry.id !== id);
-  writeDataset(nextItems);
 }
